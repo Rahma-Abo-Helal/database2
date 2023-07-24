@@ -1,9 +1,12 @@
 <?php 
-
+session_start();
 $page_title = "Add student";
 $css_file = 'style.css';
-include_once("./includes/header.php");
-require_once("./connect_db.php");
+
+
+if(isset($_SESSION['name'])){
+require_once("./init.php");
+
 
 if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST"){
     $name   = filter_var($_POST['name'],FILTER_SANITIZE_STRING);
@@ -11,17 +14,7 @@ if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST"){
     $department  = filter_var($_POST['department'],FILTER_SANITIZE_NUMBER_INT);
     $GPA   = filter_var($_POST['GPA'],FILTER_SANITIZE_STRING);
 
-    global $con;
-
-    $stmt = $con->prepare("INSERT INTO students(name,collage,department,GPA) values(?,?,?,?)");
-    $stmt->execute(array($name,$collage,$department,$GPA));
-
-    echo "
-    <script>
-        toastr.success('تم بنجاح :- تم اضافة الصلاحيه بنجاح')
-    </script>";
-
-    header("Refresh:1;url=index.php"); 
+    add_student($name,$department,$collage,$GPA);
 }
 
 ?>
@@ -54,4 +47,7 @@ if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST"){
 </form>
 
 <?php include_once("./includes/footer.php");
+}else{
+  header("location:signin.php"); 
+}
  ?>

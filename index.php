@@ -1,14 +1,12 @@
 <?php
+session_start();
 $page_tittle ='All student';
 $css_file ='style.css';
-include_once('./includes/header.php');
-require_once('./connect_db.php');
 
-global $con;
-$stmt = $con->prepare('SELECT * FROM students');
-$stmt->execute();
-$students = $stmt->fetchAll();
+if(isset($_SESSION['name'])){
+require_once("./init.php");
 
+$students = get_all_students("students");
 ?>
 
 <table class="table">
@@ -38,5 +36,11 @@ $students = $stmt->fetchAll();
 
     <a href ="add_student.php">ADD STUDENT</a>
     <?php
-    include_once("./includes/footer.php");
+      include_once("./includes/footer.php");
+
+   }else{
+    header("location:signin.php"); 
+
+   }
+
     ?>
